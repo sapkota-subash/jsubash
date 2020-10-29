@@ -1,0 +1,16 @@
+Name,Price,Theatre_id
+Popcorn,42,1
+Cola,44,1
+Snack,38,1
+Popcorn,30,2
+Cola,39,2
+Snack,40,2
+Popcorn,44,3
+Cola,20,3
+Snack,25,3
+Popcorn,44,4
+Cola,21,5
+Snack,46,5
+Popcorn,50,5
+Cola,46,5
+Snack,28,5

@@ -1,0 +1,67 @@
+Match (c:Customer)-[r]->(movie:Movie)
+return avg(r.rating) as Average_rating,movie.Director
+order by Average_rating DESC
+Limit 1
+
+
+
+
+
+
+
+
+
+
+Match (movie:Movie { Director:"xxxxx"})
+
+
+match (invoice:Invoice)<-[]-()-[]->(movie:Movie)
+return avg(invoice.account)
+ as Collection ,movie
+order by Collection DESC
+Limit 1
+
+
+match (invoice:Invoice)<-[]-()-[]->(c:Shows)-[]->(movie:Movie)
+return avg(invoice.amount) as Collection,movie
+order by Collection DESC
+Limit 1
+
+
+match (invoice:Invoice)<-[*]->(movie:Movie)
+return avg(invoice.amount),movie
+
+match (invoice:Invoice)<-[]-()-[]->(c:Shows)-[]->(movie:Movie{Movie_id:5})
+return avg(invoice.amount) as Collection,movie
+
+
+match (invoice:Invoice)<-[]-()-[]->(c:Shows)-[]->(movie:Movie)
+return avg(invoice.amount) as Collection,movie.Director
+order by Collection DESC
+Limit 1
+
+
+
+Match (c:Customer)-[r]->(movie:Movie)
+return avg(r.rating) as Average_rating,movie.Director
+order by Average_rating 
+Limit 1
+
+
+
+
+
+Match (movie:Movie {Year_of_make: 2011})
+return movie.Genre,count(movie.Genre) as Total_Release_on_2011
+
+
+
+Match (theatre:Theatre)-[]->(seat:Seat)
+return avg(seat.price) as Average_rates , theatre
+order by Average_rates DESC
+limit 1
+
+
+Match (show:Shows{status:"Available"})-[r]->(movie:Movie)
+return movie.Name as Movies
+

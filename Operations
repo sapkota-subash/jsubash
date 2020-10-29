@@ -1,0 +1,89 @@
+1. Creating new Theatre
+
+Merge ( theatre1000:Theatre{ Theatre_id:1000,Name:"ABBBB",Location:"Lakhdenpokh",Capacity:150,Type:"Standalone",Contact:"443-151-4202"})
+OR
+Create ( theatre1000:Theatre{ Theatre_id:1000,Name:"Harris Inc",Location:"Lakhdenpokh",Capacity:150,Type:"Standalone",Contact:"443-151-4202"})
+return theatre1000
+
+2. Create Shows of a movie in a theatre
+
+match (theatre:Theatre{Theatre_id:5})
+match(movie:Movie{Movie_id:5})
+create (show1000:Shows{show_id:1000,status:"Available",dateTime:"2016/12/14 12:00"})
+create (theatre)-[:has]->(show1000)
+create (show1000)-[:of]->(movie)
+
+3.Update shows status
+MATCH (p:Shows {show_id:1000})
+SET p.status = "Not-available"
+return p
+
+4. Book a show
+match(customer:Customer{ Customer_id:1})
+match(show:Shows{ show_id:1})
+Create (booking1000:Booking{ Booking_id:1000,dateTime:"1990/12/14 13:00",status:"Pending"})
+create (invoice1000:Invoice{ dateTime:"1990/12/14 13:00",amount:1000})
+create (food1000:Booked_food{name:"Popcorn"})
+create (seat1000:Booked_seat{seat_no:5})
+create (customer)-[:has]->(booking1000)
+create (booking1000)-[:has]->(invoice1000)
+create (booking1000)-[:has]->(seat1000)
+create (booking1000)-[:has]->(food1000)
+return *
+ 
+
+5.Cancel a Booked show
+
+MATCH (p:Booking {Booking_id:1000})
+SET p.status = "canceled"
+return p
+
+6.Update Customer data
+MATCH (p:Customer {Customer_id:10})
+SET p.Name = "Subash Sapkota"
+return p
+
+
+7.Delete a show
+match(show:Shows{ show_id:1000})
+Detach delete show
+
+
+
+8.Review Movie/theatre Review
+a.For Movie
+
+MATCH (p:Customer{ Customer_id:10})
+match(movie:Movie{ Movie_id:5})
+create (p)-[:review{review:"It is a good movie",rating:5}]->(movie)
+return *
+
+
+b.For Theatre
+MATCH (p:Customer { Customer_id:10})
+match(b:Theatre{ Theatre_id:5})
+create (p)-[:review{review:"It is a good movie",rating:5}]->(b)
+return *
+
+
+9.Delete Movie/theatre review
+a.for Theatre
+MATCH (p:Customer{ Customer_id:10})-[r]->(theatre:Theatre{ Theatre_id:5})
+delete r
+return p,r,theatre
+
+verify by
+match (p:Customer{ Customer_id:10})-[r]-> (theatre:Theatre)
+return *
+
+b.For Movie
+MATCH (p:Customer{ Customer_id:10})-[r]->(movie:Movie{ Movie_id:5})
+delete r
+return p,r,movie
+
+verify by
+match (p:Customer{ Customer_id:10})-[r]-> (movie:Movie)
+return *
+
+
+

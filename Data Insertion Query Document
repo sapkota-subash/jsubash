@@ -1,0 +1,87 @@
+Download Neo4j on desktop and put the data files in respective import folder which depends on you os.Search Neo4j
+
+# import Customer data
+
+LOAD CSV WITH HEADERS FROM "file:///Customer.csv" AS csvLine
+Create (person:Customer{ Customer_id: toInteger(csvLine.Customer_id),Name:(csvLine.Name),Age:(csvLine.Age),Phone_number:(csvLine.Phone_number),Email:(csvLine.Email),Address:(csvLine.Address),Gender:(csvLine.gender)})
+
+
+
+# import Theatre data
+LOAD CSV WITH HEADERS FROM "file:///Theatre.csv" AS csvLine
+Create (theatre:Theatre {Theatre_id: toInteger(csvLine.Theatre_id),Name:(csvLine.Name),Location:(csvLine.Location),Capacity:(csvLine.Capacity),Type:(csvLine.Type),Contact:(csvLine.Contact)})
+
+#import Movie data
+LOAD CSV WITH HEADERS FROM "file:///Movie.csv" AS csvLine
+Create (movie:Movie {Movie_id :  toInteger(csvLine.Movie_id),Name: (csvLine.Name),Genre:(csvLine.Genre),Language:(csvLine.Language),Year_of_make:(csvLine.Year_of_make),Director:(csvLine.Director),Duration:(csvLine.Duration)})
+
+#import shows data
+LOAD CSV WITH HEADERS FROM "file:///Shows.csv" AS csvLine
+match(theatre:Theatre{ Theatre_id: toInteger(csvLine.Theatre_id)})
+match(movie:Movie{ Movie_id: toInteger(csvLine.Movie_id)})
+Create (show:Shows{ show_id:toInteger(csvLine.show_id) ,status:csvLine.status, dateTime:csvLine.DateTime})
+create (theatre)-[:has]->(show)
+create (show)-[:of]->(movie)
+
+
+
+
+#import Theatre food data
+LOAD CSV WITH HEADERS FROM "file:///Food.csv" AS csvLine
+match (theatre:Theatre{ Theatre_id:  toInteger(csvLine.Theatre_id)})
+Create (food:Food{ name: csvLine.Name, price:toInteger(csvLine.Price)})
+create (theatre)-[:has]->(food)
+
+
+#import Theatre seat data
+LOAD CSV WITH HEADERS FROM "file:///Seat.csv" AS csvLine
+match (theatre:Theatre{ Theatre_id: toInteger( csvLine.Theatre_id)})
+Merge (seat:Seat {number:toInteger(csvLine.Seat_no),type: csvLine.Seat_type,price:toInteger(csvLine.Price)})
+create (theatre)-[:has]->(seat)
+
+
+
+#import Booking data
+LOAD CSV WITH HEADERS FROM "file:///Booking.csv" AS csvLine
+match(person:Customer{ Customer_id: toInteger(csvLine.Customer_id)})
+match(show:Shows{ show_id: toInteger(csvLine.Shows_id)})
+Create (booking:Booking { Booking_id: toInteger(csvLine.Booking_id),dateTime:csvLine.DateTime,status:csvLine.Status})
+create (person)-[:has]->(booking)
+create (booking)-[:of]->(show)
+
+
+
+#import Booking Invoice data
+LOAD CSV WITH HEADERS FROM "file:///Invoice.csv" AS csvLine
+match(booking:Booking{Booking_id: toInteger(csvLine.Booking_id)})
+Create (invoice:Invoice {datetime:csvLine.DateTime,amount:toInteger(csvLine.Amount)})
+create (booking)-[:has]->(invoice)
+
+
+#import Booking seat data
+LOAD CSV WITH HEADERS FROM "file:///Booked_seat.csv" AS csvLine
+match(booking:Booking{Booking_id: toInteger(csvLine.Booking_id)})
+Create (booked_seat:Booked_Seat {Seat_no:toInteger(csvLine.Seat_no)})
+create (booking)-[:has]->(booked_seat)
+
+
+
+#import Booking Food data
+LOAD CSV WITH HEADERS FROM "file:///Booked_food.csv" AS csvLine
+match(booking:Booking{Booking_id: toInteger(csvLine.Booking_id)})
+Create (booked_food:Booked_Food {name:csvLine.Food_name})
+create (booking)-[:has]->(booked_food)
+
+
+#import movies review
+LOAD CSV WITH HEADERS FROM "file:///Movie_Review.csv" AS csvLine
+match(person:Customer{ Customer_id: toInteger(csvLine.Customer_id)})
+match(movie:Movie{ Movie_id: toInteger(csvLine.Movie_id)})
+create (person)-[:review{review:csvLine.review,rating:toInteger(csvLine.rating)}]->(movie)
+
+
+#import Theatre reviews
+LOAD CSV WITH HEADERS FROM "file:///Theatre_Review.csv" AS csvLine
+match(person:Customer{ Customer_id: toInteger(csvLine.Customer_id)})
+match(theatre:Theatre{ Theatre_id: toInteger(csvLine.Theatre_id)})
+create (person)-[:review{review:csvLine.review,rating:toInteger(csvLine.rating)}]->(theatre)
